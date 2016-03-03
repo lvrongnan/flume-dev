@@ -74,7 +74,7 @@ public class nginxparse implements Interceptor {
   public IPLocation ipdb;
   //private FileWriter fw;
 
-  public String [] objlist = {"timestamp","times","statusCode"};
+  public String [] objlist = {"timestamp","host","statusCode","responsetime"};
   /**
    * Only {@link haproxyparse.Builder} can build me
    */
@@ -173,10 +173,11 @@ public class nginxparse implements Interceptor {
    */
   @Override
   public List<Event> intercept(List<Event> events) {
+    List<Event> interceptedEvents = new ArrayList<Event>(events.size());
     for (Event event : events) {
-      intercept(event);
+      interceptedEvents.add(intercept(event));
     }
-    return events;
+    return interceptedEvents;
   }
 
   @Override
@@ -192,7 +193,7 @@ public class nginxparse implements Interceptor {
 
     @Override
     public Interceptor build() {
-      return new haproxyparse();
+      return new nginxparse();
     }
 
     @Override

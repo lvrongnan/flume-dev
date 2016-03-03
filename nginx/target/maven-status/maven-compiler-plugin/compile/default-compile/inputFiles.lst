@@ -1,3 +1,4 @@
-/home/users/lvrn/test/flume/my-flume-dev/haparse/src/main/java/lvrn/flume/interceptor/haproxyparse.java
-/home/users/lvrn/test/flume/my-flume-dev/haparse/src/main/java/lvrn/flume/interceptor/test.java
-/home/users/lvrn/test/flume/my-flume-dev/haparse/src/main/java/lvrn/flume/interceptor/IPLocation.java
+/home/users/lvrn/tmp/flume-dev/nginx/src/main/java/lvrn/flume/interceptor/nginxparse.java
+/home/users/lvrn/tmp/flume-dev/nginx/src/main/java/lvrn/flume/interceptor/haproxyparse.java
+/home/users/lvrn/tmp/flume-dev/nginx/src/main/java/lvrn/flume/interceptor/IPLocation.java
+/home/users/lvrn/tmp/flume-dev/nginx/src/main/java/lvrn/flume/interceptor/test.java
