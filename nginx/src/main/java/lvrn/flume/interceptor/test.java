@@ -32,7 +32,7 @@ import jregex.Matcher;
 import jregex.Pattern;
 
 public class test {
-	private static Pattern p;
+	private static Pattern p,ip;
 	public static int striptoint(String ip){
         String []iparry = ip.split("\\.");
         int sum = 0;
@@ -56,15 +56,15 @@ public class test {
         		+"({backend}\\S+) \\| "
         		+"({responsetime}\\S+) \\| "
         		+"({refer}\\S+) \\| "
-        		+"({remoteaddr}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}) \\| "
+        		+"({remoteaddr}.+) \\| "
         		+"({remoteuser}\\S+) \\| "
         		+"({verb}\\S+) "
         		+"({uri}\\S+) "
         		+"({version}\\S+) \\| "
         		+"({useragent}.+) \\| "
-        		+"({xforwardfor}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})$";
+        		+"({xforwardfor}.+)$";
 		p = new Pattern(rx);
-		String log="23/Feb/2016:16:00:01 +0800 | js.funtv.bestv.com.cn | 200 | 331 | 8609 | [::1]:9000 | 0.084 | - | 10.201.194.112 | - | GET /search/mretrieve/v1?mtype=1&area=0&cate=52&year=1900_2100&order=3&pg=1&pz=101&pv=1 HTTP/1.1 | Dalvik/1.6.0 (Linux; U; Android 4.4.4; LS48H310G Build/KTU84P) | 112.112.184.3";
+		String log="23/Feb/2016:16:00:01 +0800 | js.funtv.bestv.com.cn | 200 | 331 | 8609 | [::1]:9000 | 0.084 | - | 10.201.194.112 | - | GET /search/mretrieve/v1?mtype=1&area=0&cate=52&year=1900_2100&order=3&pg=1&pz=101&pv=1 HTTP/1.1 | Dalvik/1.6.0 (Linux; U; Android 4.4.4; LS48H310G Build/KTU84P) | -";
 		String testrx=
 			"^({timestamp}\\d{2}/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/\\d{4}:\\d{2}:\\d{2}:\\d{2}) "
 			+"({timezone}\\S+) \\| "
@@ -90,15 +90,22 @@ public class test {
 			 System.out.println(m.group("host"));
 			 System.out.println(m.group("statusCode"));
 			 System.out.println(m.group("useragent"));
+			 System.out.println(m.group("remoteaddr"));
+			 System.out.println(m.group("xforwardfor"));
     		}
 		else{
 			System.out.println("does not match");	
 		}
-		String ip = m.group("xforwardfor");
-		IPLocation ipdb =  new IPLocation();
-		List<String> result = ipdb.search(ip);
-		//int num = striptoint(ip);
-		System.out.println(result);		
+		String iprex = "({remoteaddr}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})";
+		ip = new Pattern(iprex);
+		Matcher ipmatch = ip.matcher(m.group("xforwardfor"));
+		if(ipmatch.matches()){
+			String ip = m.group("xforwardfor");
+			IPLocation ipdb =  new IPLocation();
+			List<String> result = ipdb.search(ip);
+			//int num = striptoint(ip);
+			System.out.println(result);		
+		}
         }
 
 }

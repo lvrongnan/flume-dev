@@ -69,8 +69,8 @@ public class nginxparse implements Interceptor {
           .getLogger(haproxyparse.class);
 
   
-  public Pattern relog,reuri,ipfild;
-  public String rx,urix,ipx;
+  public Pattern relog,reuri;
+  public String rx,urix;
   public IPLocation ipdb;
   //private FileWriter fw;
 
@@ -95,18 +95,16 @@ public class nginxparse implements Interceptor {
             +"({backend}\\S+) \\| "
             +"({responsetime}\\S+) \\| "
             +"({refer}\\S+) \\| "
-            +"({remoteaddr}.+) \\| "
+            +"({remoteaddr}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}) \\| "
             +"({remoteuser}\\S+) \\| "
             +"({verb}\\S+) "
             +"({uri}\\S+) "
             +"({version}\\S+) \\| "
             +"({useragent}.+) \\| "
-            +"({xforwardfor}.+)$";
+            +"({xforwardfor}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})$";
 	relog = new Pattern(rx);
 	urix = "({realuri}\\S+)\\?(\\S+)";
-	ipx = "({remoteaddr}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})";
 	reuri = new Pattern(urix);
-	ipfild = new Pattern(ipx);
 	ipdb =  new IPLocation();
 	//try{
         //	fw = new FileWriter("/tmp/hafilter");
@@ -143,20 +141,11 @@ public class nginxparse implements Interceptor {
 		halogjson.put(field,m.group(field));
 	}
     //convert ip to country province city isp
-    String xforwardfor = m.group("xforwardfor");
-    Matcher ipmatch = ipfild.matcher(xforwardfor);
-    if(ipmatch.matches()){
-    		List<String> ipresult = ipdb.search(m.group("xforwardfor"));
-    		halogjson.put("country",ipresult.get(0));
-    		halogjson.put("province",ipresult.get(1));
-    		halogjson.put("city",ipresult.get(2));
-    		halogjson.put("isp",ipresult.get(3));
-	}else{
-		halogjson.put("country","NULL");
-		halogjson.put("province","NULL");
-		halogjson.put("city","NULL");
-		halogjson.put("isp","NULL");
-	}
+    List<String> ipresult = ipdb.search(m.group("xforwardfor"));
+    halogjson.put("country",ipresult.get(0));
+    halogjson.put("province",ipresult.get(1));
+    halogjson.put("city",ipresult.get(2));
+    halogjson.put("isp",ipresult.get(3));
     //add null to body
     //logger.info("now encoding is:"+System.getProperty("file.encoding"));
     //logger.info("headers:"+header);
